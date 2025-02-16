@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
+    <script src="https://kit.fontawesome.com/445c1af3dc.js" crossorigin="anonymous"></script>
+    <title>Kuulamistest</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+  <div class="row">
+    <div class="column info_box">
+      <h1>Muusika<br>kuulamistest</h1>
+      <h3>Lastakse juhuslik muusikapala juhusliku koha pealt.<br>Muusikapala mängib 30 sekundit.</h3>
+      <div class="audio-container">
+        <div class="row" style="margin-bottom: 25px;">
+          <button onclick="playRandomSong()" type="button" name="reveal_song">Järgmine laul</button>
+          <button onclick="revealSongName()" type="button" name="reveal_song">Laulu nimi</button>
+        </div>
+        <audio id="musicPlayer" controls controlsList="autoplay nodownload noplaybackrate">
+          <source id="musicSource" src="" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+      <div class="song-reveal-container">
+        <h2 id="song-reveal" class="song-reveal"></h2>    
+      </div>
+    </div>
+    <div class="column song_list">
+      <p>
+        01. "An die Musik" (Muusikale) - Franz Schubert,<br>
+        02. "Erlkönig" (Metshaldjas) - Franz Schubert,<br>
+        03. "Träumerei" (Unistus) - Robert Schumann,<br>
+        04. "Im wunderschönen Monat Mai" (See oli kaunil maikuul) - Robert Schumann,<br>
+        05. "Etüüd op. 10, nr.12, Revolutsiooniline" - Frederic Chopin,<br>
+        06. "Nokturn nr. 20" - Frederic Chopin,<br>
+        07. "Ungari rapsoodia nr.2" - Ferenc Liszt,<br>
+        08. "Totentanz" (Surmatants) - Ferenc Liszt,<br>
+        09. "Wiegenlied" (Hällilaul) - Johannes Brahms,<br>
+        10. "Ungari tants nr. 5" - Johannes Brahms,<br>
+        11. "Fantastiline sümfoonia, IV osa - Rongkäik võllapuule" - Hector Berlioz,<br>
+        12. "Figaro aaria" - Gioacchino Rossini,<br>
+        13. "Joogilaul" - Giuseppe Verdi,<br>
+        14. "Dies Irae" - Giuseppe Verdi,<br>
+        15. "Lauretta aaria" - Giacomo Puccini,<br>
+        16. "Prints Calafi aaria" - Giacomo Puccini,<br>
+        17. "Carmeni aaria (Habanera)" - Georges Bizet,<br>
+        18. "Toreadooride sisenemine" - Georges Bizet,<br>
+        19. "Pulmamarss" - Richard Wagner,<br>
+        20. "Valküüride lend" - Richard Wagner,<br>
+        21. "Avamäng ooperile Ruslan ja Ludmilla" - Mihhail Glinka,<br>
+        22. "Luikede teema" - Pjotr Tšaikovski,<br>
+        23. "Klaverikontsert nr.1, op.23" - Pjotr Tšaikovski,<br>
+        24. "Adele kuplee" - Johann Strauss jun,<br>
+        25. "Meeste septett" - Franz Lehar,<br>
+        26. "Kimalase lend" - Nikolai Rimski-Korsakov,<br>
+        27. "Tsaar Boriss Godunovi kroonimisstseen" - Modest Mussorgski,<br>
+        28. "Hommikumeeleolu" - Edvard Grieg,<br>
+        29. "Mäekuninga koopas" - Edvard Grieg,<br>
+        30. "Finlandia" - Jean Sibelius,<br>
+        31. "Sümfoonia nr. 8 (Sümfoonia tuhandele esitajale)" - Gustav Mahler,<br>
+        32. "Also Sprach Zarathustra" - Richard Strauss,<br>
+        33. "Fauni pärastlõuna" - Claude Debussy,<br>
+        34. "Claire de Lune" (Kuuvalgus) - Claude Debussy,<br>
+        35. "Bolero" - Maurice Ravel,<br>
+        36. "Da kommt ein licht!" - Arnold Schönberg,<br>
+        37. "Põrgulik tants" - Igor Stravinski,<br>
+        38. "O, Fortuna" - Carl Orff,<br>
+        39. "The Young Persons Guide to the Orchestra" - Benjamin Britten,<br>
+        40. "Capulettide ballil" - Sergei Prokofjev,<br>
+        41. "Pidulik avamäng" - Dmitri Šostakovitš,<br>
+        42. "Rhapsody in Blue" - George Gershwin,<br>
+        43. "Bacchanale" - John Cage,<br>
+        44. "Imaginary Landscape nr.3" - John Cage,<br>
+        45. "Struktur XI" - Karlheinz Stockhausen,<br>
+        46. "City Life" - Steve Reich,<br>
+        47. "Tapajos river" - Philip Glass,<br>
+        48. "Truman sleeps" - Philip Glass
+      </p>
+    </div>
+  </div>
+</body>
+</html>
