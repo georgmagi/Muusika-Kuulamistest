@@ -92,12 +92,18 @@ function playRandomSong() {
         initAudioContext();
         showLoading();
         
+        // Get the audio element
+        const audio = document.getElementById("musicPlayer");
+        
         // Stop any currently playing audio and clear timeout
-        const currentAudio = document.getElementById("musicPlayer");
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
+        audio.pause();
+        audio.currentTime = 0;
         clearTimeout(timeoutId);
         isPlaying = false;
+        
+        // Remove all existing event listeners
+        audio.removeEventListener('loadedmetadata', null);
+        audio.removeEventListener('error', null);
         
         const songName = document.getElementById("song-reveal");
         songName.style.opacity = "0";
@@ -110,12 +116,29 @@ function playRandomSong() {
         
         currentSongIndex = randomIndex;
         
-        // Encode the file path properly
-        const encodedPath = encodeURI(songs[currentSongIndex]).replace(/'/g, '%27');
-        currentAudio.src = encodedPath;
+        // Encode the file path properly for iOS
+        let encodedPath = songs[currentSongIndex];
+        // Remove any leading './' as it can cause issues on iOS
+        encodedPath = encodedPath.replace(/^\.\//, '');
+        // Encode the path properly
+        encodedPath = encodeURI(encodedPath).replace(/'/g, '%27');
         
-        currentAudio.addEventListener('loadedmetadata', function() {
+        console.log('Attempting to load audio from:', encodedPath);
+        
+        // Set new source
+        audio.src = encodedPath;
+        
+        // Add loading timeout
+        const loadingTimeout = setTimeout(() => {
             hideLoading();
+            alert("Heli laadimine võttis liiga kaua aega. Veenduge, et kõik failid on õiges kaustas ja proovige uuesti.");
+        }, 10000); // 10 second timeout
+        
+        const loadedMetadataHandler = function() {
+            clearTimeout(loadingTimeout);
+            hideLoading();
+            console.log('Audio metadata loaded successfully');
+            
             const maxStartTime = Math.max(0, this.duration - 30);
             const randomStartTime = Math.floor(Math.random() * maxStartTime);
             this.currentTime = randomStartTime;
@@ -123,6 +146,7 @@ function playRandomSong() {
             const playPromise = this.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
+                    console.log('Audio started playing successfully');
                     isPlaying = true;
                     clearTimeout(timeoutId);
                     timeoutId = setTimeout(() => {
@@ -133,22 +157,37 @@ function playRandomSong() {
                     console.error("Playback failed:", error);
                     hideLoading();
                     if (error.name === "NotAllowedError") {
-                        alert("Palun vajutage uuesti 'Järgmine laul' nuppu heli mängimiseks.");
+                        alert("iOS seadmel peab muusika mängimiseks:\n1. Avama lehe Safari brauseris\n2. Veenduma, et kõik failid on õiges kaustas\n3. Vajutama uuesti 'Järgmine laul' nuppu");
+                    } else {
+                        alert("Viga heli mängimisel. Veenduge, et:\n1. Kõik failid on õiges kaustas\n2. Kasutate Safari brauserit\n3. Helifailid on MP3 formaadis");
                     }
                 });
             }
-        });
+        };
         
-        currentAudio.addEventListener('error', function(e) {
+        const errorHandler = function(e) {
+            clearTimeout(loadingTimeout);
             console.error("Error loading audio:", e);
+            console.error("Error code:", this.error ? this.error.code : 'unknown');
             hideLoading();
-            alert("Vabandust, heli laadimine ebaõnnestus. Palun proovige uuesti.");
-        });
+            alert("Heli laadimine ebaõnnestus. Veenduge, et:\n1. Kõik failid on 'songs' kaustas\n2. Helifailid on MP3 formaadis\n3. Kasutate Safari brauserit");
+        };
+        
+        // Remove old event listeners if they exist
+        audio.removeEventListener('loadedmetadata', loadedMetadataHandler);
+        audio.removeEventListener('error', errorHandler);
+        
+        // Add new event listeners
+        audio.addEventListener('loadedmetadata', loadedMetadataHandler);
+        audio.addEventListener('error', errorHandler);
+        
+        // Load the audio
+        audio.load();
         
     } catch (error) {
         console.error("Error in playRandomSong:", error);
         hideLoading();
-        alert("Midagi läks valesti. Palun proovige uuesti.");
+        alert("Midagi läks valesti. Veenduge, et:\n1. Kõik failid on lahti pakitud\n2. 'songs' kaust on olemas\n3. Kasutate Safari brauserit");
     }
 }
 
@@ -178,16 +217,55 @@ function revealSongName() {
     container.style.height = songName.scrollHeight + "px";
 }
 
-// Add event listeners when DOM is loaded
+// Add this function to check file existence
+function checkFileExists(url) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('HEAD', url, true);
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        };
+        xhr.onerror = function() {
+            resolve(false);
+        };
+        xhr.send();
+    });
+}
+
+// Update the document ready handler
 document.addEventListener('DOMContentLoaded', function() {
     const audio = document.getElementById("musicPlayer");
+    
+    // Check if we're on iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    if (isIOS) {
+        // Check if the songs directory exists
+        checkFileExists('songs').then(exists => {
+            if (!exists) {
+                alert("Hoiatus: 'songs' kausta ei leitud. Veenduge, et:\n1. Kõik failid on lahti pakitud\n2. Kasutate Safari brauserit\n3. 'songs' kaust on olemas");
+            }
+        });
+    }
     
     // Prevent default touch behavior on controls
     audio.addEventListener('touchstart', function(e) {
         e.stopPropagation();
     });
     
-    // Initialize buttons
-    document.querySelector('.play-button').addEventListener('click', playRandomSong);
-    document.querySelector('.reveal-button').addEventListener('click', revealSongName);
+    // Initialize buttons with error handling
+    const playButton = document.querySelector('.play-button');
+    const revealButton = document.querySelector('.reveal-button');
+    
+    if (playButton && revealButton) {
+        playButton.addEventListener('click', playRandomSong);
+        revealButton.addEventListener('click', revealSongName);
+    } else {
+        console.error("Buttons not found in the DOM");
+        alert("Viga lehe laadimisel. Palun värskendage lehte.");
+    }
 });
