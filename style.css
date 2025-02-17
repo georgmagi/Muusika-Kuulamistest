@@ -1,3 +1,9 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
 body {
   font-family: "DM Sans";
   margin: 0px;
@@ -30,7 +36,7 @@ h3 {
   font-size: 28px;
   font-weight: 600;
   opacity: 0;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.3s ease;
 }
 
 .row {
@@ -67,7 +73,7 @@ button {
   padding: 15px 50px;
   width: 250px;
   cursor: pointer;
-  transition: 0.6s;
+  transition: background-color 0.2s ease;
   margin-right: 10px;
 }
 
@@ -162,4 +168,55 @@ audio {
     overflow: hidden;
     transition: height 0.5s ease;
   }
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+  
+  .column {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .info_box {
+    margin-bottom: 20px;
+  }
+  
+  audio {
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  button {
+    min-height: 44px;
+    margin: 5px;
+    padding: 12px 24px;
+  }
+  
+  .play-button, .reveal-button {
+    width: 45%;
+    font-size: 16px;
+  }
+  
+  #loadingMessage {
+    font-size: 14px;
+    color: #666;
+    margin: 10px 0;
+  }
+  
+  audio::-webkit-media-controls-panel {
+    padding: 10px;
+  }
+  
+  audio::-webkit-media-controls-play-button,
+  audio::-webkit-media-controls-mute-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+#musicPlayer {
+  transition: opacity 0.3s ease;
 }
