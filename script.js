@@ -49,163 +49,143 @@ var songs = [
     "./songs/48 - Philip Glass - _Truman sleeps_, filmist _The Truman show_.mp3"
 ];
 
-var currentSongIndex;
+var currentSongIndex = null;
 var timeoutId;
 var isPlaying = false;
-let currentIndex = -1;
-let playedIndexes = [];
-let audioContext = null;
+var audioContext = null;
 
 // Initialize audio context on first user interaction
 function initAudioContext() {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
     }
 }
 
 function showLoading() {
     const player = document.getElementById("musicPlayer");
     player.style.opacity = "0.5";
-    if (document.getElementById("loadingMessage")) {
-        document.getElementById("loadingMessage").style.display = "block";
-    } else {
-        const loadingDiv = document.createElement("div");
-        loadingDiv.id = "loadingMessage";
-        loadingDiv.innerHTML = "Loading...";
-        loadingDiv.style.textAlign = "center";
-        loadingDiv.style.marginTop = "10px";
+    const loadingDiv = document.getElementById("loadingMessage") || document.createElement("div");
+    loadingDiv.id = "loadingMessage";
+    loadingDiv.innerHTML = "Laadimine...";
+    loadingDiv.style.textAlign = "center";
+    loadingDiv.style.marginTop = "10px";
+    if (!document.getElementById("loadingMessage")) {
         player.parentNode.insertBefore(loadingDiv, player.nextSibling);
     }
+    loadingDiv.style.display = "block";
 }
 
 function hideLoading() {
     const player = document.getElementById("musicPlayer");
     player.style.opacity = "1";
-    if (document.getElementById("loadingMessage")) {
-        document.getElementById("loadingMessage").style.display = "none";
+    const loadingMessage = document.getElementById("loadingMessage");
+    if (loadingMessage) {
+        loadingMessage.style.display = "none";
     }
 }
 
 function playRandomSong() {
-    initAudioContext();
-    showLoading();
-    
-    var songName = document.getElementById("song-reveal");
-    songName.style.opacity = 0;
-    
-    if (playedIndexes.length === songs.length) {
-        playedIndexes = [];
-    }
-    
-    let randomIndex = Math.floor(Math.random() * songs.length);
-    while (playedIndexes.includes(randomIndex)) {
-        randomIndex = Math.floor(Math.random() * songs.length);
-    }
-    playedIndexes.push(randomIndex);
-    
-    var audio = document.getElementById("musicPlayer");
-    var source = document.getElementById("musicSource");
-    currentSongIndex = randomIndex;
-    
-    // Clear previous handlers
-    audio.oncanplay = null;
-    audio.oncanplaythrough = null;
-    audio.onerror = null;
-    
-    // Add error handler
-    audio.onerror = function(e) {
-        console.error("Error loading audio:", e);
-        console.log("Attempted to load:", songs[currentSongIndex]);
-        hideLoading();
-        alert("Vabandust, heli laadimine ebaõnnestus. Palun proovige uuesti.");
-    };
-    
-    // Encode the file path properly
-    let encodedPath = encodeURI(songs[currentSongIndex]).replace(/'/g, '%27');
-    
-    // Set the source and load
-    source.src = encodedPath;
-    audio.src = encodedPath;
-    
-    // Handle iOS loading
-    audio.load();
-    
-    // Only set currentTime after metadata is loaded
-    audio.onloadedmetadata = function() {
-        hideLoading();
-        var randomStartTime = Math.floor(Math.random() * (Math.max(0, audio.duration - 30)));
-        audio.currentTime = parseFloat(randomStartTime);
+    try {
+        initAudioContext();
+        showLoading();
         
-        document.getElementById("song-reveal").style.display = "none";
+        const songName = document.getElementById("song-reveal");
+        songName.style.opacity = "0";
+        songName.style.display = "none";
         
-        // Play handling with timeout
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                isPlaying = true;
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => {
-                    audio.pause();
-                    isPlaying = false;
-                }, 30000);
-            }).catch(error => {
-                console.error("Playback failed:", error);
-                // For iOS, we need user interaction
-                if (error.name === "NotAllowedError") {
-                    alert("Palun vajutage uuesti 'Järgmine laul' nuppu heli mängimiseks.");
-                }
-            });
-        }
-    };
-    
-    // Add touch event handlers for better mobile experience
-    audio.addEventListener('touchstart', function() {
-        if (!isPlaying) {
-            audio.play().catch(function(error) {
-                console.log("Touch play failed:", error);
-            });
-        }
-    });
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * songs.length);
+        } while (randomIndex === currentSongIndex);
+        
+        currentSongIndex = randomIndex;
+        const audio = document.getElementById("musicPlayer");
+        
+        // Clear previous event listeners
+        const newAudio = audio.cloneNode(true);
+        audio.parentNode.replaceChild(newAudio, audio);
+        
+        // Encode the file path properly
+        const encodedPath = encodeURI(songs[currentSongIndex]).replace(/'/g, '%27');
+        newAudio.src = encodedPath;
+        
+        newAudio.addEventListener('loadedmetadata', function() {
+            hideLoading();
+            const maxStartTime = Math.max(0, this.duration - 30);
+            const randomStartTime = Math.floor(Math.random() * maxStartTime);
+            this.currentTime = randomStartTime;
+            
+            const playPromise = this.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        this.pause();
+                        isPlaying = false;
+                    }, 30000);
+                }).catch(error => {
+                    console.error("Playback failed:", error);
+                    hideLoading();
+                    if (error.name === "NotAllowedError") {
+                        alert("Palun vajutage uuesti 'Järgmine laul' nuppu heli mängimiseks.");
+                    }
+                });
+            }
+        });
+        
+        newAudio.addEventListener('error', function(e) {
+            console.error("Error loading audio:", e);
+            hideLoading();
+            alert("Vabandust, heli laadimine ebaõnnestus. Palun proovige uuesti.");
+        });
+        
+    } catch (error) {
+        console.error("Error in playRandomSong:", error);
+        hideLoading();
+        alert("Midagi läks valesti. Palun proovige uuesti.");
+    }
 }
 
 function revealSongName() {
-    var songName = document.getElementById("song-reveal");
-    songName.style.display = "block";
-    var songPath = songs[currentSongIndex];
-    if (songPath.startsWith('encode')) {
-        songPath = decodeURI(songPath);
+    if (currentSongIndex === null) {
+        alert("Palun valige kõigepealt laul.");
+        return;
     }
-    songName.innerHTML = songPath.replace(".mp3", "").slice(12).replace(/_/g, '"');
-    songName.style.opacity = 0;
-    setTimeout(() => {
-        songName.style.opacity = 1;
-    }, 10);
-    var songNameHeight = songName.scrollHeight;
-    document.querySelector(".song-reveal-container").style.height = songNameHeight + 'px';
+    
+    const songName = document.getElementById("song-reveal");
+    const songPath = songs[currentSongIndex];
+    const cleanTitle = songPath
+        .replace("./songs/", "")
+        .replace(".mp3", "")
+        .replace(/_/g, '"');
+    
+    songName.innerHTML = cleanTitle;
+    songName.style.display = "block";
+    songName.style.opacity = "0";
+    
+    // Force reflow
+    songName.offsetHeight;
+    
+    songName.style.opacity = "1";
+    
+    const container = document.querySelector(".song-reveal-container");
+    container.style.height = songName.scrollHeight + "px";
 }
 
-// Add event listener for page load
+// Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     const audio = document.getElementById("musicPlayer");
     
-    // Add play/pause toggle for touch devices
-    audio.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        if (audio.paused) {
-            audio.play();
-        } else {
-            audio.pause();
-        }
+    // Prevent default touch behavior on controls
+    audio.addEventListener('touchstart', function(e) {
+        e.stopPropagation();
     });
     
-    // Prevent default touch behavior on controls
-    const controls = audio.controls;
-    if (controls) {
-        controls.addEventListener('touchstart', function(e) {
-            e.stopPropagation();
-        });
-    }
+    // Initialize buttons
+    document.querySelector('.play-button').addEventListener('click', playRandomSong);
+    document.querySelector('.reveal-button').addEventListener('click', revealSongName);
 });
