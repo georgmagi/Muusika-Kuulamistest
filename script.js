@@ -92,6 +92,13 @@ function playRandomSong() {
         initAudioContext();
         showLoading();
         
+        // Stop any currently playing audio and clear timeout
+        const currentAudio = document.getElementById("musicPlayer");
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        clearTimeout(timeoutId);
+        isPlaying = false;
+        
         const songName = document.getElementById("song-reveal");
         songName.style.opacity = "0";
         songName.style.display = "none";
@@ -102,17 +109,12 @@ function playRandomSong() {
         } while (randomIndex === currentSongIndex);
         
         currentSongIndex = randomIndex;
-        const audio = document.getElementById("musicPlayer");
-        
-        // Clear previous event listeners
-        const newAudio = audio.cloneNode(true);
-        audio.parentNode.replaceChild(newAudio, audio);
         
         // Encode the file path properly
         const encodedPath = encodeURI(songs[currentSongIndex]).replace(/'/g, '%27');
-        newAudio.src = encodedPath;
+        currentAudio.src = encodedPath;
         
-        newAudio.addEventListener('loadedmetadata', function() {
+        currentAudio.addEventListener('loadedmetadata', function() {
             hideLoading();
             const maxStartTime = Math.max(0, this.duration - 30);
             const randomStartTime = Math.floor(Math.random() * maxStartTime);
@@ -137,7 +139,7 @@ function playRandomSong() {
             }
         });
         
-        newAudio.addEventListener('error', function(e) {
+        currentAudio.addEventListener('error', function(e) {
             console.error("Error loading audio:", e);
             hideLoading();
             alert("Vabandust, heli laadimine ebaõnnestus. Palun proovige uuesti.");

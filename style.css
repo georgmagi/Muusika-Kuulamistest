@@ -63,17 +63,15 @@ h3 {
 
 .audio-container .row {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 10px;
     width: 100%;
 }
 
 .play-button, .reveal-button {
-    flex: 1;
-    max-width: 250px;
-    width: auto;
-    margin: 0;
-    white-space: nowrap;
+    flex: 0 0 auto;
+    width: 250px;
+    margin-right: 10px;
 }
 
 button {
@@ -209,13 +207,14 @@ audio {
   }
   
   .audio-container .row {
-    flex-direction: row;
     justify-content: space-between;
+    gap: 10px;
   }
   
   .play-button, .reveal-button {
     flex: 1;
-    max-width: none;
+    width: auto;
+    margin-right: 0;
     padding: 12px 20px;
     font-size: 14px;
   }
