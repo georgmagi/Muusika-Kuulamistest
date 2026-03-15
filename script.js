@@ -202,7 +202,7 @@ function revealSongName() {
     songName.style.opacity = "1";
     
     const container = document.querySelector(".song-reveal-container");
-    container.style.height = songName.scrollHeight + "px";
+    container.style.height = "auto";
 }
 
 // Add this function to check file existence
