@@ -181,9 +181,9 @@ audio {
   }
 
   .song-reveal-container {
-    height: 150px;
-    overflow: hidden;
-    transition: height 0.5s ease;
+    min-height: 0;
+    overflow: visible;
+    transition: min-height 0.5s ease;
   }
 }
 
