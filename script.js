@@ -1232,14 +1232,19 @@ document.addEventListener('DOMContentLoaded', function() {
         var peekText = document.getElementById('quiz-notes-peek-text');
         var btn = document.getElementById('quiz-notes-btn');
         if (peek.classList.contains('hidden')) {
-            var notes = state.data.songs[state.quizCurrent].notes;
-            peekText.textContent = notes || 'Märkmeid pole. Lisa need Õpi lehel.';
+            peekText.value = state.data.songs[state.quizCurrent].notes || '';
             peek.classList.remove('hidden');
             btn.textContent = 'Peida märkmed';
         } else {
             peek.classList.add('hidden');
             btn.textContent = 'Näita märkmeid';
         }
+    });
+    document.getElementById('quiz-notes-peek-text').addEventListener('input', function() {
+        if (state.quizCurrent == null) return;
+        state.data.songs[state.quizCurrent].notes = this.value;
+        state.data.songs[state.quizCurrent].notesUpdatedAt = Date.now();
+        saveStateDebounced();
     });
     document.getElementById('quiz-reveal-btn').addEventListener('click', quizReveal);
     document.getElementById('quiz-notes').addEventListener('input', function() {
