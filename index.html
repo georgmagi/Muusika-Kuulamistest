@@ -13,25 +13,27 @@
 <body>
 
 <nav class="tab-bar">
-    <button data-page="learn" class="active">Õpi</button>
-    <button data-page="quiz">Harjuta</button>
-    <button data-page="compare">Võrdle</button>
+    <div class="tab-bar-inner">
+        <button data-page="learn" class="active">Õpi</button>
+        <button data-page="quiz">Harjuta</button>
+        <button data-page="compare">Võrdle</button>
+    </div>
 </nav>
 
 <!-- ======== LEARN PAGE ======== -->
 <div class="page" id="page-learn">
     <div class="row">
         <div class="column info_box learn-main">
-            <div class="learn-nav">
-                <button id="learn-prev" class="learn-arrow">&lsaquo;</button>
-                <span id="learn-counter" class="learn-counter">01 / 36</span>
-                <button id="learn-next" class="learn-arrow">&rsaquo;</button>
-            </div>
-
             <div class="learn-meta">
                 <h2 id="learn-title" class="learn-title">"Mu isamaa armas"</h2>
                 <p id="learn-composer" class="learn-composer">Uuem eesti rahvalik laul</p>
                 <span id="learn-type" class="learn-type">rahvalik laul</span>
+            </div>
+
+            <div class="learn-nav">
+                <button id="learn-prev" class="learn-arrow">&lsaquo;</button>
+                <span id="learn-counter" class="learn-counter">01 / 36</span>
+                <button id="learn-next" class="learn-arrow">&rsaquo;</button>
             </div>
 
             <div class="player">
@@ -64,7 +66,6 @@
             </div>
         </div>
         <div class="column song_list learn-song-list-col">
-            <button id="learn-toggle-list" class="toggle-list-btn mobile-only">Näita nimekirja</button>
             <div id="learn-song-list-wrapper">
                 <div id="learn-song-list" class="interactive-song-list"></div>
             </div>
@@ -146,7 +147,7 @@
 
                     <!-- Confusion prompt (after "Ei teadnud") -->
                     <div id="quiz-confusion" class="quiz-confusion hidden">
-                        <p class="quiz-confusion-label">Klikka teosele, millega läks segamini</p>
+                        <p class="quiz-confusion-label">Klikka teosele, millega läks segamini <span class="confusion-arrow"></span></p>
                         <button id="quiz-confusion-skip" class="quiz-confusion-skip">Edasi</button>
                     </div>
                 </div>
@@ -161,7 +162,6 @@
             </div>
         </div>
         <div class="column song_list quiz-song-list-col">
-            <button id="quiz-toggle-list" class="toggle-list-btn mobile-only">Näita nimekirja</button>
             <div id="quiz-song-list-wrapper">
                 <div id="quiz-song-list" class="interactive-song-list"></div>
             </div>

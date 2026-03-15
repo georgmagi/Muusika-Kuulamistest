@@ -1181,17 +1181,6 @@ function initComparePlayer() {
 // Song List Toggle (Mobile)
 // =============================================================================
 
-function toggleSongList(pagePrefix) {
-    var list = document.getElementById(pagePrefix + '-song-list-wrapper');
-    var btn = document.getElementById(pagePrefix + '-toggle-list');
-    if (list.classList.contains('collapsed')) {
-        list.classList.remove('collapsed');
-        btn.textContent = 'Peida nimekiri';
-    } else {
-        list.classList.add('collapsed');
-        btn.textContent = 'Näita nimekirja';
-    }
-}
 
 // =============================================================================
 // Init
@@ -1234,10 +1223,6 @@ document.addEventListener('DOMContentLoaded', function() {
         saveStateDebounced();
     });
 
-    // Mobile song list toggle
-    document.getElementById('learn-toggle-list').addEventListener('click', function() {
-        toggleSongList('learn');
-    });
 
     // Quiz controls
     document.getElementById('quiz-start-btn').addEventListener('click', quizStart);
@@ -1290,9 +1275,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 resetBtn.classList.remove('confirming');
             }, 3000);
         }
-    });
-    document.getElementById('quiz-toggle-list').addEventListener('click', function() {
-        toggleSongList('quiz');
     });
 
     initQuizPlayer();

@@ -35,13 +35,17 @@ h3 {
    ============================================================================= */
 
 .tab-bar {
-  display: flex;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 0 20px;
-  background: #fff;
+  background: linear-gradient(to right, #fff 50%, #000 50%);
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.tab-bar-inner {
+  display: flex;
+  width: 50%;
+  padding: 0 20px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .tab-bar button {
@@ -450,23 +454,6 @@ button:active {
   font-weight: 500;
 }
 
-/* Song list toggle (mobile) */
-.toggle-list-btn {
-  display: none;
-  width: 100%;
-  border-radius: 0;
-  border: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  background: #111;
-  color: #fff;
-  font-size: 14px;
-  padding: 12px;
-}
-
-.toggle-list-btn:hover {
-  background: #222;
-  color: #fff;
-}
 
 /* =============================================================================
    Quiz Page
@@ -656,6 +643,10 @@ button:active {
   letter-spacing: 1px;
   color: #666;
   margin: 0;
+}
+
+.confusion-arrow::after {
+  content: '\2192';
 }
 
 .quiz-confusion-skip {
@@ -927,16 +918,22 @@ button:active {
     min-height: auto;
   }
 
-  /* Tab bar scrollable */
+  /* Tab bar equal width on mobile */
   .tab-bar {
-    padding: 0 10px;
-    overflow-x: auto;
+    background: #fff;
+  }
+
+  .tab-bar-inner {
+    width: 100%;
+    padding: 0;
   }
 
   .tab-bar button {
+    flex: 1;
     font-size: 13px;
     padding: 12px 14px;
     white-space: nowrap;
+    text-align: center;
   }
 
   /* Learn page mobile */
@@ -944,39 +941,18 @@ button:active {
     font-size: 26px;
   }
 
+  .learn-nav {
+    margin-top: 8px;
+  }
+
+  .confusion-arrow::after {
+    content: '\2193';
+  }
+
   .learn-main {
-    gap: 18px;
+    gap: 24px;
   }
 
-  /* Mobile song list toggle */
-  .toggle-list-btn {
-    display: block;
-  }
-
-  .learn-song-list-col #learn-song-list-wrapper.collapsed {
-    display: none;
-  }
-
-  .learn-song-list-col #learn-song-list-wrapper {
-    display: none;
-  }
-
-  .learn-song-list-col .toggle-list-btn ~ #learn-song-list-wrapper {
-    display: none;
-  }
-
-  .learn-song-list-col #learn-song-list-wrapper:not(.collapsed) {
-    display: block;
-  }
-
-  /* Quiz page mobile */
-  .quiz-song-list-col #quiz-song-list-wrapper {
-    display: none;
-  }
-
-  .quiz-song-list-col #quiz-song-list-wrapper:not(.collapsed) {
-    display: block;
-  }
 
   .quiz-buttons {
     flex-direction: column;
