@@ -1302,4 +1302,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('compare-back-btn').addEventListener('click', compareBackToList);
 
     initComparePlayer();
+
+    // Spacebar to play/pause
+    document.addEventListener('keydown', function(e) {
+        if (e.code === 'Space' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+            var audio = document.getElementById('musicPlayer');
+            if (audio.paused) {
+                audio.play().catch(function() {});
+            } else {
+                audio.pause();
+            }
+        }
+    });
 });
