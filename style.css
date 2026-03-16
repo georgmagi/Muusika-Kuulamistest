@@ -762,6 +762,10 @@ button:active {
   margin: 0 4px;
 }
 
+#compare-back-btn {
+  align-self: flex-start;
+}
+
 .compare-card {
   display: flex;
   flex-direction: column;

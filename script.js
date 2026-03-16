@@ -1315,4 +1315,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    document.addEventListener('keyup', function(e) {
+        if (e.code === 'Space' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+        }
+    });
 });
