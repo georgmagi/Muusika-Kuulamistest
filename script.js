@@ -491,18 +491,6 @@ function renderLearnSongList() {
         });
     });
 
-    // Scroll current into view (only within the list container, not the page)
-    var currentEl = list.querySelector('.song-list-item.current');
-    if (currentEl) {
-        var wrapper = document.getElementById('learn-song-list-wrapper');
-        if (wrapper) {
-            var wrapperRect = wrapper.getBoundingClientRect();
-            var elRect = currentEl.getBoundingClientRect();
-            if (elRect.top < wrapperRect.top || elRect.bottom > wrapperRect.bottom) {
-                wrapper.scrollTop += elRect.top - wrapperRect.top - wrapperRect.height / 2;
-            }
-        }
-    }
 }
 
 function learnPlayCurrent() {
