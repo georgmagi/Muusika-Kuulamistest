@@ -1299,6 +1299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         compareGuess(state.compareB);
     });
     document.getElementById('compare-next-btn').addEventListener('click', compareBackToList);
+    document.getElementById('compare-back-btn').addEventListener('click', compareBackToList);
 
     initComparePlayer();
 });
