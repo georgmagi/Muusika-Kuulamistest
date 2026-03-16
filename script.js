@@ -1140,11 +1140,15 @@ function comparePlayPiece(songIndex) {
     audio.load();
     audio.onloadedmetadata = function() {
         var saved = state.data.songs[songIndex].markerPct;
+        var marker = document.getElementById('compare-start-marker');
         if (saved && saved > 0.005) {
             audio.currentTime = saved * audio.duration;
+            marker.style.display = '';
+            marker.style.left = (saved * 100) + '%';
         } else {
             var maxStart = Math.max(0, audio.duration - 30);
             audio.currentTime = Math.floor(Math.random() * maxStart);
+            marker.style.display = 'none';
         }
         audio.play().then(function() {
             state.clipTimeout = setTimeout(function() {
