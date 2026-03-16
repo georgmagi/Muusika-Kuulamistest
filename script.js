@@ -1315,6 +1315,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    // Arrow keys in Õpi
+    document.addEventListener('keydown', function(e) {
+        if (state.currentPage !== 'learn') return;
+        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+        if (e.code === 'ArrowLeft') { e.preventDefault(); learnPrev(); }
+        if (e.code === 'ArrowRight') { e.preventDefault(); learnNext(); }
+    });
+
     document.addEventListener('keyup', function(e) {
         if (e.code === 'Space' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
             e.preventDefault();
