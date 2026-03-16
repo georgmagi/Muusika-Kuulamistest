@@ -52,6 +52,7 @@ var state = {
     // Player
     startMode: 'start', // 'start' | 'random'
     clipTimeout: null,
+    pendingClipMs: null,
     // Quiz
     quizPhase: 'select', // 'select' | 'active' | 'done'
     quizPool: [],
@@ -623,14 +624,11 @@ function playSongClipQuiz(songIndex, durationMs) {
     audio.src = path;
     audio.load();
 
+    state.pendingClipMs = durationMs;
     whenMetadataReady(audio, function() {
         audio.currentTime = getQuizStartTime(songIndex);
         updateQuizMarkerUI();
-        audio.play().then(function() {
-            state.clipTimeout = setTimeout(function() {
-                audio.pause();
-            }, durationMs);
-        }).catch(function() {});
+        audio.play().catch(function() {});
     });
 }
 
@@ -959,6 +957,14 @@ function initQuizPlayer() {
         if (state.currentPage !== 'quiz') return;
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'block';
+        if (state.pendingClipMs && !state.clipTimeout) {
+            var ms = state.pendingClipMs;
+            state.clipTimeout = setTimeout(function() {
+                audio.pause();
+                state.clipTimeout = null;
+                state.pendingClipMs = null;
+            }, ms);
+        }
     });
 
     audio.addEventListener('pause', function() {
@@ -1151,12 +1157,8 @@ function comparePlayPiece(songIndex) {
             audio.currentTime = Math.floor(Math.random() * maxStart);
             marker.style.display = 'none';
         }
-        audio.play().then(function() {
-            state.clipTimeout = setTimeout(function() {
-                audio.pause();
-                compareResetAllBtnIcons();
-            }, 30000);
-        }).catch(function() {});
+        state.pendingClipMs = 30000;
+        audio.play().catch(function() {});
     });
 }
 
@@ -1211,6 +1213,15 @@ function initComparePlayer() {
         if (state.currentPage !== 'compare') return;
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'block';
+        if (state.pendingClipMs && !state.clipTimeout) {
+            var ms = state.pendingClipMs;
+            state.clipTimeout = setTimeout(function() {
+                audio.pause();
+                state.clipTimeout = null;
+                state.pendingClipMs = null;
+                compareResetAllBtnIcons();
+            }, ms);
+        }
     });
 
     audio.addEventListener('pause', function() {
