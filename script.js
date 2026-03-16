@@ -1101,12 +1101,21 @@ function compareBackToList() {
 }
 
 function comparePlayPiece(songIndex) {
-    initAudioContext();
     var audio = document.getElementById('musicPlayer');
+    var path = encodeSongPath(SONGS[songIndex]);
+
+    // Toggle pause if already playing this piece
+    if (audio.src && audio.src.indexOf(path) !== -1 && !audio.paused) {
+        audio.pause();
+        if (state.clipTimeout) { clearTimeout(state.clipTimeout); state.clipTimeout = null; }
+        return;
+    }
+
+    initAudioContext();
     audio.pause();
     if (state.clipTimeout) clearTimeout(state.clipTimeout);
 
-    audio.src = encodeSongPath(SONGS[songIndex]);
+    audio.src = path;
     audio.load();
     audio.onloadedmetadata = function() {
         var maxStart = Math.max(0, audio.duration - 30);
