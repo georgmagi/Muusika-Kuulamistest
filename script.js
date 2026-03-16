@@ -185,6 +185,14 @@ function encodeSongPath(song) {
     return encodeURI(song.file).replace(/'/g, '%27');
 }
 
+function whenMetadataReady(audio, callback) {
+    if (audio.readyState >= 1 && audio.duration && audio.duration !== Infinity) {
+        callback();
+    } else {
+        audio.addEventListener('loadedmetadata', callback, { once: true });
+    }
+}
+
 function getStartTime(songIndex) {
     var audio = document.getElementById('musicPlayer');
     if (!audio.duration) return 0;
@@ -212,11 +220,11 @@ function playSongFull(songIndex) {
     audio.src = path;
     audio.load();
 
-    audio.onloadedmetadata = function() {
+    whenMetadataReady(audio, function() {
         audio.currentTime = getStartTime(songIndex);
         audio.play().catch(function() {});
         updateMarkerUI();
-    };
+    });
 }
 
 function playSongClip(songIndex, durationMs) {
@@ -229,7 +237,7 @@ function playSongClip(songIndex, durationMs) {
     audio.src = path;
     audio.load();
 
-    audio.onloadedmetadata = function() {
+    whenMetadataReady(audio, function() {
         var maxStart = Math.max(0, audio.duration - (durationMs / 1000));
         audio.currentTime = Math.floor(Math.random() * maxStart);
         audio.play().then(function() {
@@ -237,7 +245,7 @@ function playSongClip(songIndex, durationMs) {
                 audio.pause();
             }, durationMs);
         }).catch(function() {});
-    };
+    });
 }
 
 // =============================================================================
@@ -373,9 +381,7 @@ function initPlayer() {
         var path = encodeSongPath(SONGS[state.learnIndex]);
         audio.src = path;
         audio.load();
-        audio.onloadedmetadata = function() {
-            callback();
-        };
+        whenMetadataReady(audio, callback);
     }
 
     marker.addEventListener('mousedown', function(e) {
@@ -622,7 +628,7 @@ function playSongClipQuiz(songIndex, durationMs) {
     audio.src = path;
     audio.load();
 
-    audio.onloadedmetadata = function() {
+    whenMetadataReady(audio, function() {
         audio.currentTime = getQuizStartTime(songIndex);
         updateQuizMarkerUI();
         audio.play().then(function() {
@@ -630,7 +636,7 @@ function playSongClipQuiz(songIndex, durationMs) {
                 audio.pause();
             }, durationMs);
         }).catch(function() {});
-    };
+    });
 }
 
 function quizReveal() {
@@ -917,7 +923,7 @@ function initQuizPlayer() {
         initAudioContext();
         audio.src = encodeSongPath(SONGS[state.quizCurrent]);
         audio.load();
-        audio.onloadedmetadata = function() { callback(); };
+        whenMetadataReady(audio, callback);
     }
 
     marker.addEventListener('mousedown', function(e) { ensureQuizAudioLoaded(function() { markerDragging = true; moveQuizMarker(e); }); e.preventDefault(); });
@@ -1138,7 +1144,7 @@ function comparePlayPiece(songIndex) {
 
     audio.src = path;
     audio.load();
-    audio.onloadedmetadata = function() {
+    whenMetadataReady(audio, function() {
         var saved = state.data.songs[songIndex].markerPct;
         var marker = document.getElementById('compare-start-marker');
         if (saved && saved > 0.005) {
@@ -1156,7 +1162,7 @@ function comparePlayPiece(songIndex) {
                 compareResetAllBtnIcons();
             }, 30000);
         }).catch(function() {});
-    };
+    });
 }
 
 function compareStartGuess() {
