@@ -624,6 +624,8 @@ function playSongClipQuiz(songIndex, durationMs) {
 
     audio.onloadedmetadata = function() {
         audio.currentTime = getQuizStartTime(songIndex);
+        state.quizClipStartTime = audio.currentTime;
+        state.quizClipDuration = durationMs / 1000;
         updateQuizMarkerUI();
         audio.play().then(function() {
             state.clipTimeout = setTimeout(function() {
@@ -884,20 +886,7 @@ function initQuizPlayer() {
         }
     });
 
-    // Seek on track
-    var dragging = false;
-    function seekFromEvent(e) {
-        var rect = track.getBoundingClientRect();
-        var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        if (audio.duration) audio.currentTime = pct * audio.duration;
-    }
-
-    track.addEventListener('mousedown', function(e) { dragging = true; seekFromEvent(e); e.preventDefault(); });
-    document.addEventListener('mousemove', function(e) { if (dragging && state.currentPage === 'quiz') seekFromEvent(e); });
-    document.addEventListener('mouseup', function() { dragging = false; });
-    track.addEventListener('touchstart', function(e) { dragging = true; seekFromEvent(e.touches[0]); e.preventDefault(); });
-    document.addEventListener('touchmove', function(e) { if (dragging && state.currentPage === 'quiz') seekFromEvent(e.touches[0]); });
-    document.addEventListener('touchend', function() { dragging = false; });
+    // Seeking disabled in quiz — seeking within the full track reveals song length
 
     // Marker drag
     var markerDragging = false;
@@ -946,12 +935,15 @@ function initQuizPlayer() {
         el.classList.toggle('active', el.dataset.mode === state.startMode);
     });
 
-    // Update quiz player UI on timeupdate
+    // Update quiz player UI on timeupdate — show elapsed clip time, not absolute position
     audio.addEventListener('timeupdate', function() {
         if (state.currentPage !== 'quiz' || !audio.duration) return;
-        var pct = (audio.currentTime / audio.duration) * 100;
+        var clipStart = state.quizClipStartTime || 0;
+        var clipDur = state.quizClipDuration || 30;
+        var elapsed = audio.currentTime - clipStart;
+        var pct = Math.min(100, Math.max(0, (elapsed / clipDur) * 100));
         fill.style.width = pct + '%';
-        timeEl.textContent = formatTime(audio.currentTime);
+        timeEl.textContent = formatTime(Math.max(0, elapsed));
     });
 
     audio.addEventListener('play', function() {
@@ -1141,6 +1133,7 @@ function comparePlayPiece(songIndex) {
     audio.onloadedmetadata = function() {
         var maxStart = Math.max(0, audio.duration - 30);
         audio.currentTime = Math.floor(Math.random() * maxStart);
+        state.compareClipStartTime = audio.currentTime;
         audio.play().then(function() {
             state.clipTimeout = setTimeout(function() {
                 audio.pause();
@@ -1193,8 +1186,11 @@ function initComparePlayer() {
 
     audio.addEventListener('timeupdate', function() {
         if (state.currentPage !== 'compare' || !audio.duration) return;
-        fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-        timeEl.textContent = formatTime(audio.currentTime);
+        var clipStart = state.compareClipStartTime || 0;
+        var elapsed = audio.currentTime - clipStart;
+        var pct = Math.min(100, Math.max(0, (elapsed / 30) * 100));
+        fill.style.width = pct + '%';
+        timeEl.textContent = formatTime(Math.max(0, elapsed));
     });
 
     audio.addEventListener('play', function() {

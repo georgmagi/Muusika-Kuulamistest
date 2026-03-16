@@ -490,6 +490,17 @@ button:active {
   gap: 28px;
 }
 
+.quiz-card .player-track,
+.compare-card .player-track,
+.compare-mystery-player .player-track {
+  cursor: default;
+}
+.quiz-card .player-track:hover,
+.compare-card .player-track:hover,
+.compare-mystery-player .player-track:hover {
+  height: 4px;
+}
+
 /* Progress */
 .quiz-progress {
   display: flex;
