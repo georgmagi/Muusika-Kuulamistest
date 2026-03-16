@@ -1093,11 +1093,26 @@ function compareBackToList() {
     var audio = document.getElementById('musicPlayer');
     audio.pause();
     if (state.clipTimeout) { clearTimeout(state.clipTimeout); state.clipTimeout = null; }
+    compareResetAllBtnIcons();
 
     document.getElementById('compare-card').classList.add('hidden');
     document.getElementById('compare-pairs-list').classList.remove('hidden');
     // Re-render in case data changed
     renderComparePairsList(getConfusionPairs());
+}
+
+function compareSetBtnIcon(btnId, playing) {
+    var btn = document.getElementById(btnId);
+    if (!btn) return;
+    var playIcon = btn.querySelector('.play-icon');
+    var pauseIcon = btn.querySelector('.pause-icon');
+    if (playIcon) playIcon.style.display = playing ? 'none' : 'block';
+    if (pauseIcon) pauseIcon.style.display = playing ? 'block' : 'none';
+}
+
+function compareResetAllBtnIcons() {
+    compareSetBtnIcon('compare-play-a', false);
+    compareSetBtnIcon('compare-play-b', false);
 }
 
 function comparePlayPiece(songIndex) {
@@ -1108,6 +1123,7 @@ function comparePlayPiece(songIndex) {
     if (audio.src && audio.src.indexOf(path) !== -1 && !audio.paused) {
         audio.pause();
         if (state.clipTimeout) { clearTimeout(state.clipTimeout); state.clipTimeout = null; }
+        compareResetAllBtnIcons();
         return;
     }
 
@@ -1115,13 +1131,21 @@ function comparePlayPiece(songIndex) {
     audio.pause();
     if (state.clipTimeout) clearTimeout(state.clipTimeout);
 
+    // Reset all buttons, then set the active one to pause
+    compareResetAllBtnIcons();
+    var activeBtnId = songIndex === state.compareA ? 'compare-play-a' : 'compare-play-b';
+    compareSetBtnIcon(activeBtnId, true);
+
     audio.src = path;
     audio.load();
     audio.onloadedmetadata = function() {
         var maxStart = Math.max(0, audio.duration - 30);
         audio.currentTime = Math.floor(Math.random() * maxStart);
         audio.play().then(function() {
-            state.clipTimeout = setTimeout(function() { audio.pause(); }, 30000);
+            state.clipTimeout = setTimeout(function() {
+                audio.pause();
+                compareResetAllBtnIcons();
+            }, 30000);
         }).catch(function() {});
     };
 }
@@ -1183,6 +1207,7 @@ function initComparePlayer() {
         if (state.currentPage !== 'compare') return;
         playIcon.style.display = 'block';
         pauseIcon.style.display = 'none';
+        compareResetAllBtnIcons();
     });
 }
 
