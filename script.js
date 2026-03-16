@@ -1308,6 +1308,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.code === 'Space' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
             e.preventDefault();
             var audio = document.getElementById('musicPlayer');
+            // If nothing loaded, start the current page's song
+            if (!audio.src || audio.src === window.location.href) {
+                if (state.currentPage === 'learn') {
+                    learnPlayCurrent();
+                } else if (state.currentPage === 'quiz' && state.quizCurrent != null) {
+                    playSongClipQuiz(state.quizCurrent, 30000);
+                }
+                return;
+            }
             if (audio.paused) {
                 audio.play().catch(function() {});
             } else {
