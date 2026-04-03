@@ -1,0 +1,987 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "DM Sans";
+  margin: 0px;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+h1 {
+  font-family: 'Oswald';
+  text-transform: uppercase;
+  font-weight: bold;
+  line-height: 100px;
+  font-size: 100px;
+  margin: 0px;
+}
+
+h3 {
+  font-family: "DM Sans";
+  font-weight: 300;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* =============================================================================
+   Tab Bar
+   ============================================================================= */
+
+.tab-bar {
+  background: linear-gradient(to right, #fff 50%, #000 50%);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-bar-inner {
+  display: flex;
+  width: 50%;
+  padding: 0 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tab-bar button {
+  font-family: 'Oswald';
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 14px 20px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-bar button:hover {
+  color: #000;
+  background: none;
+}
+
+.tab-bar button.active {
+  color: #000;
+  border-bottom-color: #000;
+}
+
+.tab-bar button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.tab-bar button:disabled:hover {
+  color: #ccc;
+  background: none;
+}
+
+/* =============================================================================
+   Custom Audio Player
+   ============================================================================= */
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.player-btn {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.player-btn:hover {
+  background: #000;
+}
+
+.player-btn:hover .player-icon {
+  fill: #fff;
+}
+
+.player-icon {
+  width: 16px;
+  height: 16px;
+  fill: #000;
+  transition: fill 0.2s;
+}
+
+.play-icon {
+  margin-left: 2px;
+}
+
+.player-time,
+.player-duration {
+  font-family: 'Oswald';
+  font-size: 13px;
+  color: #888;
+  min-width: 32px;
+  letter-spacing: 0.5px;
+}
+
+
+.player-track {
+  width: 100%;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+}
+
+.player-fill {
+  height: 100%;
+  background: #000;
+  border-radius: 2px;
+  width: 0%;
+  pointer-events: none;
+}
+
+.player-track:hover {
+  height: 6px;
+}
+
+/* Track wrapper (holds bar + marker) */
+.player-track-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+/* Start marker triangle */
+.player-start-marker {
+  position: absolute;
+  top: 10px;
+  left: 0%;
+  transform: translateX(-50%);
+  cursor: grab;
+  padding: 4px 8px;
+  z-index: 10;
+  user-select: none;
+}
+
+.player-start-marker:active {
+  cursor: grabbing;
+}
+
+.marker-arrow {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 8px solid #000;
+}
+
+/* Three-dot menu */
+.player-menu-wrapper {
+  position: relative;
+  padding: 8px;
+  margin: -8px;
+}
+
+.player-menu-btn {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.player-menu-btn:hover {
+  color: #000;
+  background: #f0f0f0;
+}
+
+.player-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 2px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  min-width: 140px;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.player-menu-wrapper:hover .player-menu {
+  display: block;
+}
+
+.player-menu-item {
+  font-family: 'DM Sans';
+  font-size: 13px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  text-transform: none;
+  color: #555;
+}
+
+.player-menu-item:hover {
+  background: #f5f5f5;
+}
+
+.player-menu-item.active {
+  color: #000;
+  font-weight: 500;
+}
+
+.player-menu-item.active::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: #000;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* =============================================================================
+   Page containers
+   ============================================================================= */
+
+.page {
+  min-height: calc(100vh - 50px);
+}
+
+/* =============================================================================
+   Freeplay Page (original styles)
+   ============================================================================= */
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+
+.song_list {
+  background-color: black;
+  color: white;
+  padding: 20px 50px 50px;
+  min-height: 100vh;
+  line-height: 30px;
+}
+
+.info_box {
+  padding: 50px;
+  padding-right: 100px;
+}
+
+
+button {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #000000;
+  background-color: #ffffff;
+  font-size: 16px;
+  border: 1px solid #000000;
+  border-radius: 50px;
+  padding: 15px 30px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+}
+
+button:hover {
+  color: #ffffff;
+  background-color: #000000;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+
+/* =============================================================================
+   Learn Page
+   ============================================================================= */
+
+.learn-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Navigation arrows + counter */
+.learn-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.learn-arrow {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.learn-counter {
+  font-family: 'Oswald';
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #555;
+}
+
+/* Song metadata */
+.learn-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.learn-title {
+  font-family: 'Oswald';
+  text-transform: uppercase;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.learn-composer {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+}
+
+.learn-type {
+  font-size: 14px;
+  color: #888;
+  text-transform: lowercase;
+  font-style: italic;
+}
+
+/* Notes */
+.learn-notes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.learn-notes-label {
+  font-family: 'Oswald';
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #666;
+}
+
+.learn-notes {
+  font-family: 'DM Sans';
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f8f8f8;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s;
+}
+
+.learn-notes:focus {
+  outline: none;
+  border-color: #000;
+  background: #fff;
+}
+
+
+/* Interactive song list */
+.interactive-song-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-list-item {
+  padding: 8px 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.song-list-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.song-list-item.current {
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: #fff;
+  font-weight: 500;
+}
+
+
+/* =============================================================================
+   Quiz Page
+   ============================================================================= */
+
+.quiz-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.quiz-heading {
+  font-family: 'Oswald';
+  text-transform: uppercase;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.quiz-desc {
+  font-size: 16px;
+  color: #555;
+  margin: 8px 0 24px;
+}
+
+.quiz-start-btn {
+  font-family: 'Oswald';
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.quiz-card {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.quiz-card .player-track,
+.compare-card .player-track,
+.compare-mystery-player .player-track {
+  cursor: default;
+}
+.quiz-card .player-track:hover,
+.compare-card .player-track:hover,
+.compare-mystery-player .player-track:hover {
+  height: 4px;
+}
+
+/* Progress */
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#quiz-remaining {
+  font-family: 'Oswald';
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #555;
+  white-space: nowrap;
+}
+
+.quiz-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: #000;
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.quiz-reset-link {
+  white-space: nowrap;
+  font-family: 'DM Sans';
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: none;
+  color: #999;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.quiz-reset-link:hover {
+  color: #000;
+  background: none;
+}
+
+.quiz-reset-link.confirming {
+  color: #c00;
+}
+
+.quiz-reset-link.confirming:hover {
+  color: #c00;
+}
+
+/* Ask buttons */
+.quiz-ask {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.quiz-ask-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.quiz-notes-btn,
+.quiz-reveal-btn {
+  flex: 1;
+  font-family: 'Oswald';
+  font-size: 16px;
+  letter-spacing: 1px;
+  padding: 16px 24px;
+}
+
+.quiz-notes-btn {
+  border-style: dashed;
+}
+
+/* Answer section */
+.quiz-answer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quiz-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Notes display (read-only) */
+.quiz-notes-display {
+  border-left: 3px solid #ddd;
+  padding: 12px 16px;
+  background: #f8f8f8;
+  border-radius: 0 8px 8px 0;
+}
+
+.quiz-notes-text {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Assessment buttons */
+.quiz-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.quiz-btn {
+  flex: 1;
+  font-family: 'Oswald';
+  font-size: 16px;
+  letter-spacing: 1px;
+  padding: 16px 24px;
+}
+
+.quiz-btn-right {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.quiz-btn-right:hover {
+  background: #333;
+  color: #fff;
+}
+
+/* Confusion picker */
+.quiz-confusion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quiz-confusion-label {
+  font-family: 'Oswald';
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000;
+  margin: 0;
+}
+
+.confusion-arrow::after {
+  content: '\2192';
+}
+
+.quiz-confusion-skip {
+  font-family: 'Oswald';
+  font-size: 15px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #999;
+  background: none;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #ccc;
+  padding: 4px 0;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.quiz-confusion-skip:hover {
+  color: #000;
+  border-bottom-color: #000;
+  background: none;
+}
+
+/* Quiz done */
+.quiz-done {
+  text-align: center;
+  padding: 40px 0;
+}
+
+/* Quiz song list states */
+.song-list-item.selected {
+  outline: 1px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.song-list-item.deselected {
+  opacity: 1;
+}
+
+.song-list-item.confusion-pick {
+  cursor: pointer;
+}
+
+.song-list-item.confusion-pick:hover {
+  background: rgba(255, 255, 255, 0.2);
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: -1px;
+}
+
+.song-list-item.done {
+  opacity: 0.4;
+}
+
+.song-list-item.done::before {
+  content: '\2713  ';
+}
+
+/* =============================================================================
+   Compare Page
+   ============================================================================= */
+
+.compare-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.compare-empty {
+  padding: 20px 0;
+}
+
+.compare-pairs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.compare-pairs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.compare-pair-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+  font-family: 'DM Sans';
+  font-size: 17px;
+  text-transform: none;
+  font-weight: 400;
+  color: #333;
+  background: #fff;
+  text-align: left;
+}
+
+.compare-pair-item:hover {
+  border-color: #000;
+  background: #f5f5f5;
+  color: #000;
+}
+
+.compare-pair-count {
+  font-family: 'Oswald';
+  font-size: 14px;
+  color: #999;
+  min-width: 24px;
+  text-align: center;
+}
+
+.compare-pair-vs {
+  color: #999;
+  margin: 0 4px;
+}
+
+#compare-back-btn {
+  align-self: flex-start;
+}
+
+.compare-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.compare-phase {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.compare-instruction {
+  font-family: 'Oswald';
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #333;
+  margin: 0;
+}
+
+.compare-pair {
+  display: flex;
+  gap: 20px;
+}
+
+.compare-piece {
+  flex: 1;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.compare-label {
+  font-family: 'Oswald';
+  font-size: 28px;
+  font-weight: 600;
+  color: #000;
+}
+
+.compare-piece-title {
+  font-family: 'Oswald';
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.compare-piece-composer {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.compare-play-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.compare-play-btn:hover {
+  background: #000;
+}
+
+.compare-play-btn:hover .player-icon {
+  fill: #fff;
+}
+
+.compare-play-btn .player-icon {
+  margin-left: 2px;
+}
+
+.compare-result-text {
+  font-family: 'Oswald';
+  font-size: 28px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.compare-result-answer {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+}
+
+/* =============================================================================
+   Mobile Responsive
+   ============================================================================= */
+
+@media only screen and (max-width: 900px) {
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 50px;
+    line-height: 60px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .info_box, .song_list {
+    padding: 25px;
+    max-width: 100%;
+  }
+
+  .info_box {
+    padding-right: 25px;
+  }
+
+  .song_list p {
+    white-space: normal;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .column {
+    width: 100%;
+    display: block;
+  }
+
+  .info_box {
+    order: 1;
+  }
+
+  .song_list {
+    order: 2;
+    min-height: auto;
+  }
+
+  /* Tab bar equal width on mobile */
+  .tab-bar {
+    background: #fff;
+  }
+
+  .tab-bar-inner {
+    width: 100%;
+    padding: 0;
+  }
+
+  .tab-bar button {
+    flex: 1;
+    font-size: 13px;
+    padding: 12px 14px;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* Learn page mobile */
+  .learn-title {
+    font-size: 26px;
+  }
+
+  .learn-nav {
+    margin-top: 8px;
+  }
+
+  .confusion-arrow::after {
+    content: '\2193';
+  }
+
+  .learn-main {
+    gap: 24px;
+  }
+
+
+  .quiz-buttons {
+    flex-direction: column;
+  }
+
+  .compare-pair {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  button {
+    width: auto;
+    min-height: 44px;
+  }
+}

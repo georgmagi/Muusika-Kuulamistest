@@ -1,0 +1,42 @@
+// =============================================================================
+// Song Metadata
+// =============================================================================
+
+var SONGS = [
+    { id: 0,  file: "songs/01 - Uuem eesti rahvalik laul (liedertafellik laul) - _Mu isamaa armas_.mp3", number: "01", title: "Mu isamaa armas", composer: "Uuem eesti rahvalik laul", type: "rahvalik laul" },
+    { id: 1,  file: "songs/02 - Aleksander Saebelmann-Kunileid - koorilaul _Mu isamaa on minu arm_.mp3", number: "02", title: "Mu isamaa on minu arm", composer: "Aleksander Saebelmann-Kunileid", type: "koorilaul" },
+    { id: 2,  file: "songs/03 - Aleksander Saebelmann-Kunileid - koorilaul _Sind surmani_.mp3", number: "03", title: "Sind surmani", composer: "Aleksander Saebelmann-Kunileid", type: "koorilaul" },
+    { id: 3,  file: "songs/04 - Friedrich August Saebelmann - koorilaul _Kaunimad laulud.mp3", number: "04", title: "Kaunimad laulud", composer: "Friedrich August Saebelmann", type: "koorilaul" },
+    { id: 4,  file: "songs/05 - Karl August Hermann - koorilaul _Isamaa mälestus_.mp3", number: "05", title: "Isamaa mälestus", composer: "Karl August Hermann", type: "koorilaul" },
+    { id: 5,  file: "songs/06 - Miina Härma - koorilaul _Meeste laul_.mp3", number: "06", title: "Meeste laul", composer: "Miina Härma", type: "koorilaul" },
+    { id: 6,  file: "songs/07 - Miina Härma - koorilaul _Tuljak_.mp3", number: "07", title: "Tuljak", composer: "Miina Härma", type: "koorilaul" },
+    { id: 7,  file: "songs/08 - Aleksander Läte - koorilaul _Kuldrannake_.mp3", number: "08", title: "Kuldrannake", composer: "Aleksander Läte", type: "koorilaul" },
+    { id: 8,  file: "songs/09 - Rudolf Tobias - oratoorium _Joonase lähetamine_, osa _Sanctus_ (Püha).mp3", number: "09", title: "Sanctus (Püha)", composer: "Rudolf Tobias", type: "oratoorium" },
+    { id: 9,  file: "songs/10 - Mihkel Lüdig - koorilaul _Koit_.mp3", number: "10", title: "Koit", composer: "Mihkel Lüdig", type: "koorilaul" },
+    { id: 10, file: "songs/11 - Artur Kapp - oratoorium _Hiiob_, koor _Suur oled Sa!_.mp3", number: "11", title: "Suur oled Sa!", composer: "Artur Kapp", type: "oratoorium" },
+    { id: 11, file: "songs/12 - Artur Kapp - soololaul _Metsateel_.mp3", number: "12", title: "Metsateel", composer: "Artur Kapp", type: "soololaul" },
+    { id: 12, file: "songs/13 - Mart Saar - soololaul _Must lind_.mp3", number: "13", title: "Must lind", composer: "Mart Saar", type: "soololaul" },
+    { id: 13, file: "songs/14 - Mart Saar - koorilaul _Põhjavaim_.mp3", number: "14", title: "Põhjavaim", composer: "Mart Saar", type: "koorilaul" },
+    { id: 14, file: "songs/15 - Cyrillus Kreek - koorilaul _Õnnis on inimene_, koorilaulude kogumikust _Taaveti laulud_.mp3", number: "15", title: "Õnnis on inimene", composer: "Cyrillus Kreek", type: "koorilaul" },
+    { id: 15, file: "songs/16 - Cyrillus Kreek - koorilaul _Sirisege, sirisege sirbikesed_.mp3", number: "16", title: "Sirisege, sirisege sirbikesed", composer: "Cyrillus Kreek", type: "koorilaul" },
+    { id: 16, file: "songs/17 - Heino Eller - _Kodumaine viis_, keelpilliorkestrile.mp3", number: "17", title: "Kodumaine viis", composer: "Heino Eller", type: "keelpilliorkestrile" },
+    { id: 17, file: "songs/18 - Heino Eller - klaveripala _Liblikas_.mp3", number: "18", title: "Liblikas", composer: "Heino Eller", type: "klaveripala" },
+    { id: 18, file: "songs/19 - Eduard Tubin - sümfooniline süit balletist _Kratt_.mp3", number: "19", title: "Kratt", composer: "Eduard Tubin", type: "sümfooniline süit" },
+    { id: 19, file: "songs/20 - Gustav Ernesaks - koorilaul _Hakkame mehed minema_.mp3", number: "20", title: "Hakkame mehed minema", composer: "Gustav Ernesaks", type: "koorilaul" },
+    { id: 20, file: "songs/21 - Gustav Ernesaks - koorilaul _Mu isamaa on minu arm_.mp3", number: "21", title: "Mu isamaa on minu arm", composer: "Gustav Ernesaks", type: "koorilaul" },
+    { id: 21, file: "songs/22 - Villem Kapp - kooripoeem _Põhjarannik_.mp3", number: "22", title: "Põhjarannik", composer: "Villem Kapp", type: "kooripoeem" },
+    { id: 22, file: "songs/23 - Veljo Tormis - koorilaul _Ühtehoidmiselaul_.mp3", number: "23", title: "Ühtehoidmiselaul", composer: "Veljo Tormis", type: "koorilaul" },
+    { id: 23, file: "songs/24 - Veljo Tormis - _Jaani hobu_, V osa kooritsüklist _Eesti kalendrilaulud_.mp3", number: "24", title: "Jaani hobu", composer: "Veljo Tormis", type: "kooritsükkel" },
+    { id: 24, file: "songs/25 - Eino Tamberg - _Concerto grosso_, I osa.mp3", number: "25", title: "Concerto grosso, I osa", composer: "Eino Tamberg", type: "kontsert" },
+    { id: 25, file: "songs/26 - Arvo Pärt - _Credo_ (_Usutunnistus_) segakoorile, klaverile ja orkestrile.mp3", number: "26", title: "Credo (Usutunnistus)", composer: "Arvo Pärt", type: "koorimuusika" },
+    { id: 26, file: "songs/27 - Arvo Pärt - _Fratres_ (_Vennad_) viiulile, keelpilliorkestrile ja löökriistadele.mp3", number: "27", title: "Fratres (Vennad)", composer: "Arvo Pärt", type: "kammermuusika" },
+    { id: 27, file: "songs/28 - Raimo Kangro - _Arcus_ (_Vibu_) sümfooniaorkestrile (katkend).mp3", number: "28", title: "Arcus (Vibu)", composer: "Raimo Kangro", type: "orkestriteos" },
+    { id: 28, file: "songs/29 - Lepo Sumera - klaveriteos _Pala aastast 1981_, 2. pala _..._.mp3", number: "29", title: "Pala aastast 1981", composer: "Lepo Sumera", type: "klaveriteos" },
+    { id: 29, file: "songs/30 - Erkki-Sven Tüür - _Ostium_ (_Uks_).mp3", number: "30", title: "Ostium (Uks)", composer: "Erkki-Sven Tüür", type: "orkestriteos" },
+    { id: 30, file: "songs/31 - Erkki-Sven Tüür - _Spectrum I_, orelile.mp3", number: "31", title: "Spectrum I", composer: "Erkki-Sven Tüür", type: "oreliteos" },
+    { id: 31, file: "songs/32 - Urmas Sisask - Missa nr. 3 _Eesti missa_, osa _Sanctus_.mp3", number: "32", title: "Eesti missa, Sanctus", composer: "Urmas Sisask", type: "missa" },
+    { id: 32, file: "songs/33 - Urmas Sisask -  klaveritsükkel _Tähistaeva tsükkel lastele_, 2. pala _Kassiopeia_.mp3", number: "33", title: "Kassiopeia", composer: "Urmas Sisask", type: "klaveritsükkel" },
+    { id: 33, file: "songs/34 - Toivo Tulev - _Der Herr ist mein getreuer Hirt, II_ (_Issand on minu ustav karjane_).mp3", number: "34", title: "Der Herr ist mein getreuer Hirt, II", composer: "Toivo Tulev", type: "koorimuusika" },
+    { id: 34, file: "songs/35 - Mart Siimer - koorilaul _Homme_.mp3", number: "35", title: "Homme", composer: "Mart Siimer", type: "koorilaul" },
+    { id: 35, file: "songs/36 - Pärt Uusberg - koorilaul _Muusika_.mp3", number: "36", title: "Muusika", composer: "Pärt Uusberg", type: "koorilaul" }
+];

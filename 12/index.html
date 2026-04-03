@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href='https://fonts.googleapis.com/css?family=Oswald:400,600' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=DM Sans:300,400,500' rel='stylesheet'>
+    <title>Kuulamistest - 12. klass</title>
+    <link rel="stylesheet" type="text/css" href="style.css?v=2">
+</head>
+<body>
+
+<nav class="tab-bar">
+    <div class="tab-bar-inner">
+        <button data-page="learn" class="active">Õpi</button>
+        <button data-page="quiz">Harjuta</button>
+        <button data-page="compare">Võrdle</button>
+    </div>
+</nav>
+
+<!-- ======== LEARN PAGE ======== -->
+<div class="page" id="page-learn">
+    <div class="row">
+        <div class="column info_box learn-main">
+            <div class="learn-meta">
+                <h2 id="learn-title" class="learn-title">"Mu isamaa armas"</h2>
+                <p id="learn-composer" class="learn-composer">Uuem eesti rahvalik laul</p>
+                <span id="learn-type" class="learn-type">rahvalik laul</span>
+            </div>
+
+            <div class="learn-nav">
+                <button id="learn-prev" class="learn-arrow">&lsaquo;</button>
+                <span id="learn-counter" class="learn-counter">01 / 36</span>
+                <button id="learn-next" class="learn-arrow">&rsaquo;</button>
+            </div>
+
+            <div class="player">
+                <button id="player-play" class="player-btn" aria-label="Play">
+                    <svg class="player-icon play-icon" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                    <svg class="player-icon pause-icon" viewBox="0 0 24 24" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                </button>
+                <span id="player-time" class="player-time">0:00</span>
+                <div class="player-track-wrapper">
+                    <div id="player-track" class="player-track">
+                        <div id="player-fill" class="player-fill"></div>
+                    </div>
+                    <div id="player-start-marker" class="player-start-marker" style="display:none">
+                        <div class="marker-arrow"></div>
+                    </div>
+                </div>
+                <span id="player-duration" class="player-duration">0:00</span>
+                <div class="player-menu-wrapper">
+                    <button id="player-menu-btn" class="player-menu-btn" aria-label="Seaded">&middot;&middot;&middot;</button>
+                    <div id="player-menu" class="player-menu">
+                        <div class="player-menu-item active" data-mode="start">Algusest</div>
+                        <div class="player-menu-item" data-mode="random">Juhuslik</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="learn-notes-section">
+                <label for="learn-notes" class="learn-notes-label">Minu märkmed</label>
+                <textarea id="learn-notes" class="learn-notes" rows="4" placeholder="Kirjuta siia oma märkmed selle teose kohta..."></textarea>
+            </div>
+        </div>
+        <div class="column song_list learn-song-list-col">
+            <div id="learn-song-list-wrapper">
+                <div id="learn-song-list" class="interactive-song-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======== QUIZ PAGE ======== -->
+<div class="page hidden" id="page-quiz">
+    <div class="row">
+        <div class="column info_box quiz-main">
+            <!-- Start screen -->
+            <div id="quiz-start-screen" class="quiz-start-screen">
+                <h2 class="quiz-heading">Harjuta</h2>
+                <p class="quiz-desc">Kuula 30-sekundilist klippi ja proovi teos ära tunda.<br>Vali teosed nimekirjast paremal.</p>
+                <button id="quiz-start-btn" class="quiz-start-btn">Alusta</button>
+            </div>
+
+            <!-- Active quiz card -->
+            <div id="quiz-card" class="quiz-card hidden">
+                <div class="quiz-progress">
+                    <span id="quiz-remaining">36 jäänud</span>
+                    <div class="quiz-progress-bar">
+                        <div id="quiz-progress-fill" class="quiz-progress-fill"></div>
+                    </div>
+                    <button id="quiz-reset-btn" class="quiz-reset-link">Alusta uuesti</button>
+                </div>
+
+                <div class="player">
+                    <button id="quiz-play" class="player-btn" aria-label="Play">
+                        <svg class="player-icon play-icon" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                        <svg class="player-icon pause-icon" viewBox="0 0 24 24" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                    </button>
+                    <span id="quiz-time" class="player-time">0:00</span>
+                    <div class="player-track-wrapper">
+                        <div id="quiz-track" class="player-track">
+                            <div id="quiz-fill" class="player-fill"></div>
+                        </div>
+                        <div id="quiz-start-marker" class="player-start-marker" style="display:none">
+                            <div class="marker-arrow"></div>
+                        </div>
+                    </div>
+                    <span id="quiz-duration" class="player-duration" style="display:none">0:30</span>
+                    <div class="player-menu-wrapper">
+                        <button class="player-menu-btn" aria-label="Seaded">&middot;&middot;&middot;</button>
+                        <div class="player-menu">
+                            <div class="player-menu-item quiz-menu-item active" data-mode="start">Algusest</div>
+                            <div class="player-menu-item quiz-menu-item" data-mode="random">Juhuslik</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Before reveal -->
+                <div id="quiz-ask" class="quiz-ask">
+                    <div id="quiz-notes-peek" class="learn-notes-section hidden">
+                        <label for="quiz-notes-peek-text" class="learn-notes-label">Minu märkmed</label>
+                        <textarea id="quiz-notes-peek-text" class="learn-notes" rows="3" placeholder="Kirjuta siia oma märkmed selle teose kohta..."></textarea>
+                    </div>
+                    <div class="quiz-ask-buttons">
+                        <button id="quiz-notes-btn" class="quiz-notes-btn">Näita märkmeid</button>
+                        <button id="quiz-reveal-btn" class="quiz-reveal-btn">Näita vastust</button>
+                    </div>
+                </div>
+
+                <!-- After reveal -->
+                <div id="quiz-answer" class="quiz-answer hidden">
+                    <div class="quiz-meta">
+                        <h2 id="quiz-title" class="learn-title"></h2>
+                        <p id="quiz-composer" class="learn-composer"></p>
+                        <span id="quiz-type" class="learn-type"></span>
+                    </div>
+                    <div id="quiz-notes-section" class="learn-notes-section">
+                        <label for="quiz-notes" class="learn-notes-label">Minu märkmed</label>
+                        <textarea id="quiz-notes" class="learn-notes" rows="3" placeholder="Kirjuta siia oma märkmed selle teose kohta..."></textarea>
+                    </div>
+                    <div id="quiz-buttons" class="quiz-buttons">
+                        <button id="quiz-wrong" class="quiz-btn quiz-btn-wrong">Ei teadnud</button>
+                        <button id="quiz-right" class="quiz-btn quiz-btn-right">Teadsin</button>
+                    </div>
+
+                    <!-- Confusion prompt (after "Ei teadnud") -->
+                    <div id="quiz-confusion" class="quiz-confusion hidden">
+                        <p class="quiz-confusion-label">Klikka teosele, millega läks segamini <span class="confusion-arrow"></span></p>
+                        <button id="quiz-confusion-skip" class="quiz-confusion-skip">Edasi</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Done screen -->
+            <div id="quiz-done" class="quiz-done hidden">
+                <h2 class="quiz-heading">Tubli!</h2>
+                <p id="quiz-done-text" class="quiz-desc">Kõik teosed on läbitud.</p>
+                <button id="quiz-restart-btn" class="quiz-start-btn">Uuesti</button>
+            </div>
+        </div>
+        <div class="column song_list quiz-song-list-col">
+            <div id="quiz-song-list-wrapper">
+                <div id="quiz-song-list" class="interactive-song-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======== COMPARE PAGE ======== -->
+<div class="page hidden" id="page-compare">
+    <div class="row">
+        <div class="column info_box compare-main">
+            <!-- Empty state -->
+            <div id="compare-empty" class="compare-empty">
+                <h2 class="quiz-heading">Võrdle</h2>
+                <p class="quiz-desc">Harjuta esmalt, et süsteem saaks teada, milliseid teoseid sa segamini ajad.</p>
+            </div>
+
+            <!-- Pairs list -->
+            <div id="compare-pairs-list" class="compare-pairs-list hidden">
+                <h2 class="quiz-heading">Võrdle</h2>
+                <p class="quiz-desc">Sinu segamini aetud teosed</p>
+                <div id="compare-pairs" class="compare-pairs"></div>
+            </div>
+
+            <!-- Active compare -->
+            <div id="compare-card" class="compare-card hidden">
+                <button id="compare-back-btn" class="quiz-reset-link">&lsaquo; Tagasi</button>
+                <!-- Phase 1: Listen to A -->
+                <div id="compare-phase-listen" class="compare-phase">
+                    <p class="compare-instruction" id="compare-instruction">Kuula mõlemat teoset</p>
+
+                    <div class="compare-pair">
+                        <div class="compare-piece" id="compare-piece-a">
+                            <span class="compare-label">A</span>
+                            <p class="compare-piece-title" id="compare-title-a"></p>
+                            <p class="compare-piece-composer" id="compare-composer-a"></p>
+                            <button id="compare-play-a" class="compare-play-btn">
+                                <svg class="player-icon play-icon" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                                <svg class="player-icon pause-icon" viewBox="0 0 24 24" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                            </button>
+                        </div>
+                        <div class="compare-piece" id="compare-piece-b">
+                            <span class="compare-label">B</span>
+                            <p class="compare-piece-title" id="compare-title-b"></p>
+                            <p class="compare-piece-composer" id="compare-composer-b"></p>
+                            <button id="compare-play-b" class="compare-play-btn">
+                                <svg class="player-icon play-icon" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                                <svg class="player-icon pause-icon" viewBox="0 0 24 24" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="compare-ready-btn" class="quiz-start-btn">Olen valmis</button>
+                </div>
+
+                <!-- Phase 2: Guess which one -->
+                <div id="compare-phase-guess" class="compare-phase hidden">
+                    <p class="compare-instruction">Kumb on see?</p>
+
+                    <div class="player compare-mystery-player">
+                        <button id="compare-play-mystery" class="player-btn" aria-label="Play">
+                            <svg class="player-icon play-icon" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                            <svg class="player-icon pause-icon" viewBox="0 0 24 24" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                        </button>
+                        <span id="compare-time" class="player-time">0:00</span>
+                        <div class="player-track-wrapper">
+                            <div id="compare-track" class="player-track">
+                                <div id="compare-fill" class="player-fill"></div>
+                            </div>
+                            <div id="compare-start-marker" class="player-start-marker" style="display:none">
+                                <div class="marker-arrow"></div>
+                            </div>
+                        </div>
+                        <span id="compare-duration" class="player-duration" style="display:none">0:30</span>
+                    </div>
+
+                    <div class="quiz-buttons">
+                        <button id="compare-guess-a" class="quiz-btn"></button>
+                        <button id="compare-guess-b" class="quiz-btn"></button>
+                    </div>
+                </div>
+
+                <!-- Phase 3: Result -->
+                <div id="compare-phase-result" class="compare-phase hidden">
+                    <p class="compare-result-text" id="compare-result-text"></p>
+                    <p class="compare-result-answer" id="compare-result-answer"></p>
+                    <button id="compare-next-btn" class="quiz-start-btn">Järgmine</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="songs.js?v=4"></script>
+<script src="../app.js?v=4"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5fb3e8a10a9d4aab99e12cec75f58db6"}'></script>
+</body>
+</html>
